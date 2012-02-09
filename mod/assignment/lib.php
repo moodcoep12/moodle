@@ -2477,7 +2477,7 @@ class mod_assignment_grading_form extends moodleform {
             // use simple direct grading
             $grademenu['-1'] = get_string('nograde');
 
-$mform->addElement('text', 'ourgrade', get_string('grade'), 'maxlength="100" size="30"');//newly added line .
+$mform->addElement('text', 'ourgrade', get_string('grade'), 'maxlength="100" size="30"');
  $mform->setType('ourgrade', PARAM_INT);
 
 
