@@ -671,8 +671,8 @@ class assignment_base {
                     $col = 'submissioncomment';
                     $commenting = true;
                 }
-                if (isset($_POST['mytext'])) {
-                    $col = 'mytext';
+                if (isset($_POST['menu'])) {
+                    $col = 'menu';
                     $grading = true;
                 }
                 if (!$col) {
@@ -700,7 +700,7 @@ class assignment_base {
                     $updatedb = false;
 
                     if ($grading) {
-                        $grade = $_POST['mytext'][$id];
+                        $grade = $_POST['menu'][$id];
                         $updatedb = $updatedb || ($submission->grade != $grade);
                         $submission->grade = $grade;
                     } else {
@@ -1456,14 +1456,10 @@ class assignment_base {
                                 if ($final_grade->locked or $final_grade->overridden) {
                                     $grade = '<div id="g'.$auser->id.'" class="'. $locked_overridden .'">'.$final_grade->formatted_grade.'</div>';
                                 } else if ($quickgrade) {
-                                    //$attributes = array();
-                                    //$attributes['tabindex'] = $tabindex++;
-                                    //$menu = html_writer::select(make_grades_menu($this->assignment->grade), 'menu['.$auser->id.']', $auser->grade, array(-1=>get_string('nograde')), $attributes);
-                                    //$grade = '<div id="g'.$auser->id.'">'. $menu .'</div>';
-
-$grade= '<div id="g'.$auser->id.'">'
-                                         . '<textarea tabindex="'.$tabindex++.'" name="mytext['.$auser->id.']" id="submissioncomment'
-                                         . $auser->id.'" rows="2" cols="20">'.($auser->grade).'</textarea></div>';
+                                    $attributes = array();
+                                    $attributes['tabindex'] = $tabindex++;
+                                    $menu = html_writer::select(make_grades_menu($this->assignment->grade), 'menu['.$auser->id.']', $auser->grade, array(-1=>get_string('nograde')), $attributes);
+                                    $grade = '<div id="g'.$auser->id.'">'. $menu .'</div>';
 
 
                                 } else {
@@ -1475,14 +1471,10 @@ $grade= '<div id="g'.$auser->id.'">'
                                 if ($final_grade->locked or $final_grade->overridden) {
                                     $grade = '<div id="g'.$auser->id.'" class="'. $locked_overridden .'">'.$final_grade->formatted_grade.'</div>';
                                 } else if ($quickgrade) {
-                                    //$attributes = array();
-                                    //$attributes['tabindex'] = $tabindex++;
-                                    //$menu = html_writer::select(make_grades_menu($this->assignment->grade), 'menu['.$auser->id.']', $auser->grade, array(-1=>get_string('nograde')), $attributes);
-                                    //$grade = '<div id="g'.$auser->id.'">'.$menu.'</div>';
-
-$grade= '<div id="g'.$auser->id.'">'
-                                         . '<textarea tabindex="'.$tabindex++.'" name="mytext['.$auser->id.']" id="submissioncomment'
-                                         . $auser->id.'" rows="2" cols="20">'.($auser->grade).'</textarea></div>';
+                                    $attributes = array();
+                                    $attributes['tabindex'] = $tabindex++;
+                                    $menu = html_writer::select(make_grades_menu($this->assignment->grade), 'menu['.$auser->id.']', $auser->grade, array(-1=>get_string('nograde')), $attributes);
+                                    $grade = '<div id="g'.$auser->id.'">'.$menu.'</div>';
 
 
                                 } else {
@@ -1509,18 +1501,11 @@ $grade= '<div id="g'.$auser->id.'">'
                                 $grade = '<div id="g'.$auser->id.'">'.$final_grade->formatted_grade . '</div>';
                                 $hassubmission = true;
                             } else if ($quickgrade) {   // allow editing
-                                //$attributes = array();
-                                //$attributes['tabindex'] = $tabindex++;
-                                //$menu = html_writer::select(make_grades_menu($this->assignment->grade), 'menu['.$auser->id.']', $auser->grade, array(-1=>get_string('nograde')), $attributes);
-                                //$grade = '<div id="g'.$auser->id.'">'.$menu.'</div>';
-                                //$hassubmission = true;
-
-
-$grade= '<div id="g'.$auser->id.'">'
-                                         . '<textarea tabindex="'.$tabindex++.'" name="mytext['.$auser->id.']" id="submissioncomment'
-                                         . $auser->id.'" rows="2" cols="20">'.($auser->grade).'</textarea></div>';
-
-
+                                $attributes = array();
+                                $attributes['tabindex'] = $tabindex++;
+                                $menu = html_writer::select(make_grades_menu($this->assignment->grade), 'menu['.$auser->id.']', $auser->grade, array(-1=>get_string('nograde')), $attributes);
+                                $grade = '<div id="g'.$auser->id.'">'.$menu.'</div>';
+                                $hassubmission = true;
 
                             } else {
                                 $grade = '<div id="g'.$auser->id.'">-</div>';
@@ -1748,8 +1733,8 @@ $grade= '<div id="g'.$auser->id.'">'
         if (!($grading_info->items[0]->grades[$feedback->userid]->locked ||
             $grading_info->items[0]->grades[$feedback->userid]->overridden) ) {
 
-            //$submission->grade      = $feedback->xgrade;
-$submission->grade      = $feedback->ourgrade;
+            $submission->grade      = $feedback->xgrade;
+
             $submission->submissioncomment    = $feedback->submissioncomment_editor['text'];
             $submission->teacher    = $USER->id;
             $mailinfo = get_user_preferences('assignment_mailinfo', 0);
@@ -2477,13 +2462,10 @@ class mod_assignment_grading_form extends moodleform {
             // use simple direct grading
             $grademenu['-1'] = get_string('nograde');
 
-$mform->addElement('text', 'ourgrade', get_string('grade'), 'maxlength="100" size="30"');//newly added line .
- $mform->setType('ourgrade', PARAM_INT);
 
-
-            //$mform->addElement('select', 'xgrade', get_string('grade').':', $grademenu, $attributes);
-            //$mform->setDefault('xgrade', $this->_customdata->submission->grade ); //@fixme some bug when element called 'grade' makes it break
-            //$mform->setType('xgrade', PARAM_INT);
+            $mform->addElement('select', 'xgrade', get_string('grade').':', $grademenu, $attributes);
+            $mform->setDefault('xgrade', $this->_customdata->submission->grade ); //@fixme some bug when element called 'grade' makes it break
+            $mform->setType('xgrade', PARAM_INT);
         }
 
         if (!empty($this->_customdata->enableoutcomes)) {
